@@ -1,15 +1,11 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import Dialog from 'material-ui/Dialog';
+import List from './List';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
 
-class Task extends React.Component {
+class Board extends React.Component {
     constructor(props, context) {
         super(props, context);
     
@@ -24,17 +20,14 @@ class Task extends React.Component {
     handleClose = () => {
         this.setState({open: false});
     };
-    editTask = (args) => {
-        this.handleOpen();
-    }
-    deleteTask = () => {
-        alert('delete');
-    }
     handleChange = name => event => {
         this.setState({
           [name]: event.target.value,
         });
       };
+    addList = (args) => {
+        this.handleOpen();
+    }
     render() {
         const actions = [
             <FlatButton
@@ -45,15 +38,20 @@ class Task extends React.Component {
             <FlatButton
               label="Submit"
               primary={true}
-              keyboardFocused={true}
               onClick={this.handleClose}
             />,
           ];
-        const taskName = this.props.name;
+        const lists = this.props.lists.map((list) => (
+            <List 
+             name= {list.name}
+             tasks={list.tasks}
+            />
+        ));
         return (
-            <div className='task'>
+            <div className='board'>
+                <h1>{this.props.name}</h1>
                 <Dialog
-                    title="Edit Task"
+                    title="Add List"
                     actions={actions}
                     modal={true}
                     open={this.state.open}
@@ -63,25 +61,21 @@ class Task extends React.Component {
                         id="name"
                         label="Name"
                         className="TextFields-textField-389"
-                        value={this.state.name}
                         onChange={this.handleChange('name')}
                         margin="normal"
                         fullWidth
                         />
                 </Dialog>
-                <Card style={ { display: 'inline-block', margin: '5px'} }>
-                    <CardHeader style={ { float: 'left'} }
-                        title={taskName}
-                    />
-                    <IconMenu
-                        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-                    >
-                    <MenuItem primaryText="Edit"  onClick={this.editTask}/>
-                    <MenuItem primaryText="Delete" onClick={this.deleteTask}/>
-                    </IconMenu>
-                </Card>
+                <div className='listsContainer' style={ { height: '350px', overflow:'auto', whiteSpace:'nowrap'} }>
+                    {lists}
+                    <div className='list' style={ { display: 'inline-block', marginTop: '150px',verticalAlign:'top'} }>
+                        <Card style={ { display: 'inline-block', margin: '5px'} }>
+                            <FlatButton label="Add List" primary={true} onClick={this.addList}/>
+                        </Card>
+                    </div>
+                </div>
             </div>
         );
     }
 }
-export default Task;
+export default Board;

@@ -7,22 +7,45 @@ let schema = buildSchema(`
     boardId: String
     listName: String
   }
+  input DeleteListInput {
+    boardId: String
+    listId: String
+  }
   input AddTaskInput {
     boardId: String,
-    taskId: String,
+    listId: String,
     taskName: String
   }
+  input DeleteTaskInput {
+    boardId: String,
+    listId: String,
+    taskId: String
+  }
+  input UpdateListInput {
+    boardId: String,
+    listId: String,
+    listName: String
+  }
+  input UpdateTaskInput {
+    boardId: String,
+    listId: String,
+    taskId:String
+    taskName: String
+  }
+
   type Query {
     getBoards: [Board]
   }
+  
   type Mutation {
     addBoard(name: String): Board,
-    addList(input: AddListInput): Board,
-    addTask(name: String): Task,
-    updateList(name: String): List,
-    updateTask(name: String): Task,
-    deleteList(name: String): List,
-    deleteTask(name: String): Task
+    deleteBoard(id: String): Board,
+    addList(input: AddListInput): List,
+    addTask(input: AddTaskInput): List,
+    updateList(input: UpdateListInput): List,
+    updateTask(input: UpdateTaskInput): List,
+    deleteList(input: DeleteListInput): List,
+    deleteTask(input: DeleteTaskInput): Task
   }
   type Board {
     _id: String,
@@ -62,28 +85,100 @@ let root = {
     return new Promise((resolve, reject) => {
       Board.findOneAndUpdate(
         {
-          _id:input.boardId},
-          {$push: {"lists": {name: input.listName}}
-        },(err, board) => {
+          _id:input.boardId
+        },
+        {$push: {"lists": {name: input.listName}}},
+        { new: true }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists.filter( list => list.name === input.listName )[0]);
+      });
+    });
+  },
+  addTask: ({input}) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndUpdate(
+        {
+          "_id":input.boardId,
+          "lists._id":input.listId
+        },
+        {$push: {'lists.$.tasks': {name: input.taskName}}},
+        { new: true }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists.filter( list => list.id === input.listId )[0]);
+      });
+    });
+  },
+  updateList: ({input}) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndUpdate(
+        {
+          "_id":input.boardId,
+          "lists._id":input.listId
+        },
+        {$set: {'lists.$.name': input.listName}},
+        { new: true }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists.filter( list => list.id === input.listId )[0]);
+      });
+    });
+  },
+  updateTask: ({input}) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndUpdate(
+        {
+          "_id":input.boardId,
+          "lists._id":input.listId,
+          "tasks._id":input.taskId
+        },
+        {$set: {'tasks.$.name': input.taskName}},
+        { new: true }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists.filter( list => list.id === input.listId )[0]);
+      });
+    });
+  },
+  deleteBoard: ({ id }) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndRemove(
+        {
+          "_id":input.id
+        }
+        ,(err, board) => {
         if(err) reject(err);
         resolve(board);
       });
     });
   },
-  addTask: () => {
-    return { name: 'Task1' };
+  deleteList: ({input}) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndRemove(
+        {
+          "_id":input.boardId,
+          "lists._id":input.listId,
+        }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists);
+      });
+    });
   },
-  updateList: () => {
-    return { name: 'List1' };
-  },
-  updateTask: () => {
-    return { name: 'Task1' };
-  },
-  deleteList: () => {
-    return { name: 'List1' };
-  },
-  deleteTask: () => {
-    return { name: 'Task1' };
+  deleteTask: ({input}) => {
+    return new Promise((resolve, reject) => {
+      Board.findOneAndRemove(
+        {
+          "_id":input.boardId,
+          "lists._id":input.listId,
+          "tasks._id":input.taskId
+        }
+        ,(err, board) => {
+        if(err) reject(err);
+        resolve(board.lists.filter( list => list.id === input.listId )[0]);
+      });
+    });
   }
 };
 

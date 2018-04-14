@@ -45,6 +45,7 @@ class Board extends React.Component {
             <List 
              name= {list.name}
              tasks={list.tasks}
+             id={list.id}
             />
         ));
         return (

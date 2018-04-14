@@ -57,6 +57,7 @@ class List extends React.Component {
         const tasks = this.props.tasks.map((task) => (
             <Task
              name= {task.name}
+             id={task.id}
             />
         ));
         return (

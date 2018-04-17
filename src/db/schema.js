@@ -10,7 +10,7 @@ const BoardSchema = new Schema({
     lists: [{
         name: {type: String },
         tasks: [{
-            desc: String
+            name: String
         }]
     }]
 }, {collection:"Boards"});

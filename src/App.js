@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Board from './Board';
+import Board from './components/Board';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -9,7 +9,10 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
+import { Provider } from 'react-redux';
+import Store from './store';
 
+const StoreInstance = Store();
 class App extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +103,7 @@ class App extends Component {
         <AppBar
           title="KANBAN DASHBOARD"
           iconClassNameRight="muidocs-icon-navigation-expand-more"
-          onLeftIconButtonClick={this.handleToggle}
+          // onLeftIconButtonClick={this.handleToggle}
         />
         {/* <Drawer open={this.state.open}>
         <AppBar

@@ -96,7 +96,6 @@ let root = {
     });
   },
   addTask: ({input}) => {
-    console.log('--->',input.taskName);
     return new Promise((resolve, reject) => {
       Board.findOneAndUpdate(
         {

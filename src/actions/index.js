@@ -2,6 +2,32 @@ import request from 'graphql-request';
 
 const queryUrl = 'http://localhost:8000/graphql';
 
+const getBoards = () => {
+    const query = `query{
+        getBoards(){
+            _id
+            name
+            lists {
+                _id
+                name
+                tasks {
+                    _id
+                    name
+                }
+            }
+      }`
+
+    request(queryUrl, query).then((data) => {
+        return {
+            type: 'add_task',
+            item: {
+                name: data.name,
+                _id: data._id
+            }
+        }
+    });
+}
+
 const addTask = (inputData) => {
     const query = `mutation{
         addTask (input: {
@@ -231,5 +257,6 @@ export default {
     deleteList,
     addBoard,
     updateBaord,
-    deleteBoard
+    deleteBoard,
+    getBoards
 };

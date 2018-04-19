@@ -4,11 +4,12 @@ import FlatButton from 'material-ui/FlatButton';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-
+import store from '../store';
+import { addList } from '../actions/index';
 class Board extends React.Component {
     constructor(props, context) {
         super(props, context);
-    
+        this.test = "2131";
         this.state = {
             open: false,
             name: this.props.name
@@ -20,11 +21,21 @@ class Board extends React.Component {
     handleClose = () => {
         this.setState({open: false});
     };
-    handleChange = name => event => {
+    handleSubmit = () => {
+        this.setState({open: false});
+        console.log('boardId',this.props.boardId);
+        console.log('boardname',this.state.name);
+        store.dispatch(addList({
+            boardId:this.props.boardId,
+            name: this.state.name
+        }));
+    
+    };
+    handleChange = (event) => {
         this.setState({
-          [name]: event.target.value,
+          name: event.target.value,
         });
-      };
+    }
     addList = (args) => {
         this.handleOpen();
     }
@@ -38,16 +49,21 @@ class Board extends React.Component {
             <FlatButton
               label="Submit"
               primary={true}
-              onClick={this.handleClose}
+              onClick={this.handleSubmit}
             />,
           ];
-        const lists = this.props.lists.map((list) => (
+          let lists;
+        if (this.props.lists) {
+            lists = this.props.lists.map((list) => (
             <List 
              name= {list.name}
              tasks={list.tasks}
-             id={list.id}
+             listId={list._id}
+             boardId={this.props.boardId}
             />
-        ));
+        )) } else {
+            lists = [];
+        };
         return (
             <div className='board'>
                 <h1>{this.props.name}</h1>
@@ -62,7 +78,7 @@ class Board extends React.Component {
                         id="name"
                         label="Name"
                         className="TextFields-textField-389"
-                        onChange={this.handleChange('name')}
+                        onChange={this.handleChange}
                         margin="normal"
                         fullWidth
                         />

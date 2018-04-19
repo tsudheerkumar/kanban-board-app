@@ -31,7 +31,7 @@ export default (state = {}, payload) => {
             return state;
 
         case 'add_list':
-            let currentListBoard = state.boards.filter(board => board.name === payload.data.boardName)[0];
+            let currentListBoard = state.boards.filter(board => board._id === payload.data.boardId)[0];
             currentListBoard.lists.push({
                 _id: payload.data._id,
                 name: payload.data.name,

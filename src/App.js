@@ -10,12 +10,14 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import { connect } from 'react-redux';
-
+import store from './store';
+import { addBoard } from './actions/index';
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      name: ''
     };
   }
 
@@ -26,9 +28,14 @@ class App extends Component {
   handleClose = () => {
       this.setState({open: false});
   };
-  handleChange = name => event => {
+  handleSubmit = () => {
+    this.setState({open: false});
+    store.dispatch(addBoard(this.state.name));
+
+};
+  handleChange = (event) => {
       this.setState({
-        [name]: event.target.value,
+        name: event.target.value
       });
     };
   addBoard = (args) => {
@@ -44,7 +51,7 @@ class App extends Component {
       <FlatButton
         label="Submit"
         primary={true}
-        onClick={this.handleClose}
+        onClick={this.handleSubmit}
       />,
     ];
     return (
@@ -60,7 +67,7 @@ class App extends Component {
               id="boardName"
               label="baordName"
               className="TextFields-textField-389"
-              onChange={this.handleChange('name')}
+              onChange={this.handleChange}
               margin="normal"
               fullWidth
             />
@@ -85,7 +92,7 @@ class App extends Component {
           <Board
             lists={board.lists}
             name={board.name}
-            id={board.id}
+            boardId={board._id}
           />
           ))
         }

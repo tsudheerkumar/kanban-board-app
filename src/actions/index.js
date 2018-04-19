@@ -48,7 +48,7 @@ const addTask = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'add_task',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -75,7 +75,7 @@ const deleteTask = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'delete_task',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -103,7 +103,7 @@ const updateTask = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'update_task',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -115,8 +115,8 @@ const addList = (inputData) => {
     return (dispatch) => {
         const query = `mutation{
         addList (input: {
-          boardId:${inputData.boardId},
-          listName: ${inputData.listName}}){
+          boardId:"${inputData.boardId}",
+          listName: "${inputData.name}"}){
           name,
           _id
           tasks {
@@ -129,9 +129,10 @@ const addList = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'add_list',
-                item: {
-                    name: data.name,
-                    _id: data._id
+                data: {
+                    name: data.addList.name,
+                    boardId: inputData.boardId,
+                    _id: data.addList._id
                 }
             })
         })
@@ -156,7 +157,7 @@ const updateList = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'update_list',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -182,7 +183,7 @@ const deleteList = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'delete_list',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -193,13 +194,13 @@ const deleteList = (inputData) => {
 const addBoard = (inputData) => {
     return (dispatch) => {
         const query = `mutation{
-        addBoard (input: {
-          boardName:${inputData.boardName}}){
+        addBoard (
+          name:"${inputData}"){
           name,
-          _id
-          tasks {
-            _id
-            name
+          _id,
+          lists {
+              name,
+              _id
           }
         }
       }`
@@ -207,7 +208,7 @@ const addBoard = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'add_board',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -233,7 +234,7 @@ const updateBoard = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'add_board',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }
@@ -258,7 +259,7 @@ const deleteBoard = (inputData) => {
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'delete_board',
-                item: {
+                data: {
                     name: data.name,
                     _id: data._id
                 }

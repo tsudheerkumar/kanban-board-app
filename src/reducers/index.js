@@ -7,15 +7,15 @@ export default (state = {}, payload) => {
             });
 
         case 'add_task':
-            let currentTaskBoard = state.boards.filter(board => board.name === payload.data.boardName)[0];
-            let currentTaskList = currentTaskBoard.lists.filter(list => list.name === payload.data.listName)[0];
+            let currentTaskBoard = state.boards.filter(board => board._id === payload.data.boardId)[0];
+            let currentTaskList = currentTaskBoard.lists.filter(list => list._id === payload.data.listId)[0];
             currentTaskList.tasks.push({
                 _id: payload.data._id,
-                content: payload.data.name
+                name: payload.data.name
             })
-            currentTaskBoard.lists = [...currentTaskBoard.lists.filter(list => list.name !== payload.data.listName), currentTaskList];
+            currentTaskBoard.lists = [...currentTaskBoard.lists.filter(list => list._id !== payload.data.listId), currentTaskList];
             return Object.assign({}, state, {
-                boards: [...state.boards.filter(board => board.name !== payload.data.boardName), currentTaskBoard]
+                boards: [...state.boards.filter(board => board._id !== payload.data.boardId), currentTaskBoard]
             });
 
         case 'delete_task':

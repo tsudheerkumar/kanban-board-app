@@ -106,7 +106,8 @@ let root = {
         { new: true }
         ,(err, board) => {
         if(err) reject(err);
-        resolve(board.lists.filter( list => list.id === input.listId )[0]);
+        let currentList = board.lists.filter( list => list.id === input.listId )[0];
+        resolve(currentList.tasks.filter(task => task.name === input.taskName)[0]);
       });
     });
   },

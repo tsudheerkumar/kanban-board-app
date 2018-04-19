@@ -23,13 +23,10 @@ class Board extends React.Component {
     };
     handleSubmit = () => {
         this.setState({open: false});
-        console.log('boardId',this.props.boardId);
-        console.log('boardname',this.state.name);
         store.dispatch(addList({
             boardId:this.props.boardId,
             name: this.state.name
         }));
-    
     };
     handleChange = (event) => {
         this.setState({

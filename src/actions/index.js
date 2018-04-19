@@ -32,25 +32,23 @@ const getBoards = () => {
 const addTask = (inputData) => {
     return (dispatch) => {
         const query = `mutation{
-        addTask (input: {
-          boardId:${inputData.boardId},
-          listId: ${inputData.listId},
-          taskName: ${inputData.taskName}}){
-          name,
-          _id
-          tasks {
-            _id
-            name
-          }
-        }
-      }`
+            addTask (input: {
+              boardId:"${inputData.boardId}",
+              listId: "${inputData.listId}",
+              taskName: "${inputData.name}"}){
+              name,
+              _id
+            }
+        }`
 
         request(queryUrl, query).then((data) => {
             dispatch({
                 type: 'add_task',
                 data: {
-                    name: data.name,
-                    _id: data._id
+                    name: data.addTask.name,
+                    _id: data.addTask._id,
+                    boardId: inputData.boardId,
+                    listId: inputData.listId
                 }
             })
         })

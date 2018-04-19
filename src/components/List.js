@@ -9,7 +9,8 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-
+import store from '../store';
+import { addTask } from '../actions/index';
 
 class List extends React.Component {
     constructor(props, context) {
@@ -36,13 +37,22 @@ class List extends React.Component {
     addTaskList = () => {
         this.setState({taskOpen: true});
     }
-    handleChange = name => event => {
+    handleTaskChange = (event) => {
         this.setState({
-          [name]: event.target.value,
+          taskName: event.target.value,
         });
       };
+      handleTaskSubmit = () => {
+        this.setState({taskOpen: false});
+        store.dispatch(addTask({
+            boardId:this.props.boardId,
+            listId:this.props.listId,
+            name: this.state.taskName
+        }));
+    
+    };
     render() {
-        const actions = [
+        const actionsTask = [
             <FlatButton
               label="Cancel"
               primary={true}
@@ -51,7 +61,19 @@ class List extends React.Component {
             <FlatButton
               label="Submit"
               primary={true}
+              onClick={this.handleTaskSubmit}
+            />,
+          ];
+        const actionsList = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
               onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Submit"
+              primary={true}
+              onClick={this.handleListSubmit}
             />,
           ];
         const tasks = this.props.tasks.map((task) => (
@@ -64,34 +86,37 @@ class List extends React.Component {
             <div className='list' style={ { display: 'inline-block'} }>
                 <Dialog
                     title="Edit List"
-                    actions={actions}
+                    actions={actionsList}
                     modal={true}
                     open={this.state.listOpen}
                     onRequestClose={this.handleClose}
+                    ref="dialog"
                     >
                     <TextField
                         id="listName"
                         label="listName"
                         className="TextFields-textField-389"
                         value={this.state.name}
-                        onChange={this.handleChange('name')}
+                        onChange={this.handleListChange}
                         margin="normal"
                         fullWidth
                     />
                 </Dialog>
                 <Dialog
                     title="Add New Task"
-                    actions={actions}
+                    actions={actionsTask}
                     modal={true}
                     open={this.state.taskOpen}
-                    onChange={this.handleChange('name')}
+                    onChange={this.handleChange}
                     onRequestClose={this.handleClose}
+                    ref="dialog2"
                     >
                     <TextField
                         id="name"
                         label="Name"
                         className="TextFields-textField-389"
                         margin="normal"
+                        onChange={this.handleTaskChange}
                         fullWidth
                         />
                 </Dialog>

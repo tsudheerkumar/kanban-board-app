@@ -9,48 +9,13 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
-import { Provider } from 'react-redux';
-import Store from './store';
+import { connect } from 'react-redux';
 
-const StoreInstance = Store();
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      boards: [
-        {
-          name: 'Board1',
-          id: 1,
-          lists: [
-            {
-              name: "TaskList1",
-              id: 1,
-              tasks: [
-                {
-                  id: 1,
-                  name:"task1"
-                },{
-                  id: 2,
-                  name:"task2"
-                },{
-                  id: 3,
-                  name:"task3"
-                },{
-                  id: 4,
-                  name:"task4"
-                },{
-                  id: 5,
-                  name:"task5"
-                },{
-                  id: 6,
-                  name:"task6"
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      open: false
     };
   }
 
@@ -116,7 +81,7 @@ class App extends Component {
         </Drawer> */}
         
         {
-          this.state.boards.map((board) => (
+          this.props.boards.map((board) => (
           <Board
             lists={board.lists}
             name={board.name}
@@ -134,4 +99,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  const {boards = []} = state;
+  return {
+    boards
+  };
+}
+
+export default connect(mapStateToProps)(App);

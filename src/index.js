@@ -5,15 +5,16 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Provider } from 'react-redux';
-import Store from './store';
-
-const StoreInstance = Store();
+import store from './store';
+import { getBoards } from './actions/index';
 
 ReactDOM.render(
-    <Provider store={StoreInstance}>
+    <Provider store={store}>
         <MuiThemeProvider>
             <App />
         </MuiThemeProvider>
     </Provider>,
     document.getElementById('root'));
 registerServiceWorker();
+
+store.dispatch(getBoards());

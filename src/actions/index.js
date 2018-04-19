@@ -1,35 +1,37 @@
 import request from 'graphql-request';
 
-const queryUrl = 'http://localhost:8000/graphql';
+const queryUrl = 'http://localhost:3000/graphql';
 
 const getBoards = () => {
-    const query = `query{
-        getBoards(){
-            _id
-            name
-            lists {
+
+    return (dispatch) => {
+        const query = `query{
+            getBoards{
+              _id
+              name
+              lists {
                 _id
                 name
                 tasks {
-                    _id
-                    name
+                  _id
+                  name
                 }
+              }
             }
-      }`
+          }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'add_task',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'get_boards',
+                boards: data.getBoards
+            })
+        })
+    }
 }
 
 const addTask = (inputData) => {
-    const query = `mutation{
+    return (dispatch) => {
+        const query = `mutation{
         addTask (input: {
           boardId:${inputData.boardId},
           listId: ${inputData.listId},
@@ -43,18 +45,20 @@ const addTask = (inputData) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'add_task',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'add_task',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const deleteTask = (item) => {
-    const query = `mutation{
+const deleteTask = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         deleteTask (input: {
           boardId:${inputData.boardId},
           listId: ${inputData.listId},
@@ -68,18 +72,20 @@ const deleteTask = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'delete_task',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'delete_task',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const updateTask = (item) => {
-    const query = `mutation{
+const updateTask = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         updateTask (input: {
           boardId:${inputData.boardId},
           listId: ${inputData.listId},
@@ -94,18 +100,20 @@ const updateTask = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'update_task',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'update_task',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const addList = (item) => {
-    const query = `mutation{
+const addList = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         addList (input: {
           boardId:${inputData.boardId},
           listName: ${inputData.listName}}){
@@ -118,18 +126,20 @@ const addList = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'add_list',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'add_list',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const updateList = (item) => {
-    const query = `mutation{
+const updateList = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         updateList (input: {
           boardId:${inputData.boardId},
           listId: ${inputData.listId},
@@ -143,18 +153,20 @@ const updateList = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'update_list',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'update_list',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const deleteList = (item) => {
-    const query = `mutation{
+const deleteList = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         deleteList (input: {
           boardId:${inputData.boardId},
           listId: ${inputData.listId}}){
@@ -167,18 +179,20 @@ const deleteList = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'delete_list',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'delete_list',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const addBoard = (name) => {
-    const query = `mutation{
+const addBoard = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         addBoard (input: {
           boardName:${inputData.boardName}}){
           name,
@@ -190,18 +204,20 @@ const addBoard = (name) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'add_board',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'add_board',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const updateBoard = (item) => {
-    const query = `mutation{
+const updateBoard = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         updateBoard (input: {
           boardId:${inputData.boardId},
           boardName: ${inputData.boardName}}){
@@ -214,18 +230,20 @@ const updateBoard = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'add_board',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'add_board',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
-const deleteBoard = (item) => {
-    const query = `mutation{
+const deleteBoard = (inputData) => {
+    return (dispatch) => {
+        const query = `mutation{
         deleteBoard (input: {
           boardId:${inputData.boardId}}){
           name,
@@ -237,18 +255,19 @@ const deleteBoard = (item) => {
         }
       }`
 
-    request(queryUrl, query).then((data) => {
-        return {
-            type: 'delete_board',
-            item: {
-                name: data.name,
-                _id: data._id
-            }
-        }
-    });
+        request(queryUrl, query).then((data) => {
+            dispatch({
+                type: 'delete_board',
+                item: {
+                    name: data.name,
+                    _id: data._id
+                }
+            })
+        })
+    }
 }
 
-export default {
+export {
     addTask,
     deleteTask,
     updateTask,
@@ -256,7 +275,7 @@ export default {
     updateList,
     deleteList,
     addBoard,
-    updateBaord,
+    updateBoard,
     deleteBoard,
     getBoards
 };

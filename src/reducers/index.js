@@ -3,7 +3,7 @@ export default (state = {}, payload) => {
 
         case 'get_boards':
             return Object.assign({}, {
-                boards: payload.data
+                boards: payload.boards
             });
 
         case 'add_task':
